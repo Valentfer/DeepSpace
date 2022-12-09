@@ -2,14 +2,12 @@ package es.iesoretania.dam2.hlc;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,17 +18,15 @@ public class Manager extends Actor {
     Sound explosion;
     private BitmapFont font;
     private final Heroe heroe;
-    Enemigo enemigo;
+   Enemigo enemigo;
     Disparos disparos;
     List<Disparos> lDisparos;
     List<Enemigo> lEnemigo;
     List<DisparosEnemigo> ldisparosEnemigos;
-    OrthographicCamera camera;
     List<PowerUp> lPowerUp = new ArrayList<>();
 
     public int score;
-    public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, List<Enemigo> lEnemigo,
-                   List<Disparos> lDisparos, List<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera) {
+    public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, List<Enemigo> lEnemigo, List<Disparos> lDisparos, List<DisparosEnemigo> ldisparosEnemigos) {
         this.heroe = heroe;
         this.enemigo = enemigo;
         this.disparos = disparos;
@@ -38,7 +34,6 @@ public class Manager extends Actor {
         this.lEnemigo = lEnemigo;
         this.stage = stage;
         this.game = game;
-        this.camera = camera;
         this.ldisparosEnemigos = ldisparosEnemigos;
         if (font == null) {
             font = new BitmapFont();
@@ -53,13 +48,9 @@ public class Manager extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(score == 1000){
-            EnemigoJefe enemigoJefe = new EnemigoJefe(camera.position.x , camera.position.y, stage, ldisparosEnemigos);
-            enemigoJefe.setVisible(true);
-            stage.addActor(enemigoJefe);
-            //            heroe.setX(100 * Gdx.graphics.getDeltaTime());
-//            game.setScreen(new PantallaJefe(game));
-
+        if(score == 5000){
+            heroe.setX(100 * Gdx.graphics.getDeltaTime());
+            game.setScreen(new PantallaJefe(game));
         }
 
         for (PowerUp up : lPowerUp) {

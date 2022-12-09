@@ -41,7 +41,6 @@ public class Mmarcianos extends ScreenAdapter {
 			mapRenderer = new OrthogonalTiledMapRenderer(map);
 
 			Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
-			space.setVolume(0);
 			space.setLooping(true);
 			space.play();
 
@@ -64,7 +63,7 @@ public class Mmarcianos extends ScreenAdapter {
 			heroe = new Heroe(400, 100, stage, game, lDisparos);
 			PowerUp powerUp = new PowerUp();
 
-			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera);
+			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo);
 			stage.addActor(heroe);
 			stage.addActor(powerUp);
 			stage.addActor(score);

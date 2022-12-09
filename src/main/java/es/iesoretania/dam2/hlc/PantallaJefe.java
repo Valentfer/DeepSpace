@@ -48,7 +48,7 @@ public class PantallaJefe extends ScreenAdapter {
 
         stage = new Stage();
         heroe = new Heroe(50, 100, stage, game , lDisparos);
-        enemigoJefe = new EnemigoJefe();
+      //  enemigoJefe = new EnemigoJefe();
         stage.addActor(heroe);
         stage.addActor(enemigoJefe);
         Viewport viewport = new ScreenViewport(camera);
