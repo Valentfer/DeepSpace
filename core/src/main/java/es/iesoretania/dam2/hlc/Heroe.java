@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
+
 import java.util.List;
 
 import static com.badlogic.gdx.Input.Keys.SPACE;
@@ -20,7 +22,7 @@ public class Heroe extends Actor {
     DeepSpace game;
     public float vida = 3;
     boolean tocado = false;
-    List<Disparos> lDisparos;
+    Array<Disparos> lDisparos;
     enum VerticalMovement { UP, NONE, DOWN }
     enum HorizontalMovement { LEFT, NONE, RIGHT }
     HorizontalMovement horizontalMovement;
@@ -30,7 +32,7 @@ public class Heroe extends Actor {
     boolean ganado = false;
     TextureRegion regionActual, naveReposo, naveArriba, naveAbajo;
     Texture completoExplosion, completoNave;
-    public Heroe(float x, float y, Stage stage, DeepSpace game, List<Disparos> lDisparos) {
+    public Heroe(float x, float y, Stage stage, DeepSpace game, Array<Disparos> lDisparos) {
         this.stage = stage;
         this.game = game;
         this.lDisparos = lDisparos;
@@ -71,8 +73,8 @@ public class Heroe extends Actor {
         if(vida <= 0){
             stateTime += Gdx.graphics.getDeltaTime();
             regionActual = explosion.getKeyFrame(stateTime,false);
+            stateTime = 0;
             if(explosion.isAnimationFinished(stateTime)){
-                remove();
                 game.setScreen(new TheEndScreen(game, ganado));
             }
         }
@@ -87,7 +89,6 @@ public class Heroe extends Actor {
             shot = Gdx.audio.newSound(Gdx.files.internal("shot 1.wav"));
             shot.play();
             Disparos disparos = new Disparos(getX(), getY());
-            disparos.setVisible(true);
             stage.addActor(disparos);
             lDisparos.add(disparos);
         }
@@ -130,5 +131,8 @@ public class Heroe extends Actor {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
+//    public void explotar(){
+//
+//    }
 }
 

@@ -14,8 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-
-import java.util.List;
+import com.badlogic.gdx.utils.Array;
 
 
 public class Enemigo extends Actor {
@@ -30,9 +29,9 @@ public class Enemigo extends Actor {
     boolean muerto = false;
     private Action currentAction;
     float tiempo;
-    List<DisparosEnemigo> ldisparosEnemigos;
+    Array<DisparosEnemigo> ldisparosEnemigos;
 
-    public Enemigo (float x, float y, Heroe heroe, OrthographicCamera camera, Stage stage, List<DisparosEnemigo> ldisparosEnemigos) {
+    public Enemigo (float x, float y, Heroe heroe, OrthographicCamera camera, Stage stage, Array<DisparosEnemigo> ldisparosEnemigos) {
         this.stage = stage;
         this.ldisparosEnemigos = ldisparosEnemigos;
         explosiones[0] = new TextureRegion(explosionCompleto, 13, 12, 3, 3);
@@ -51,7 +50,7 @@ public class Enemigo extends Actor {
         explosiones[13] = new TextureRegion(explosionCompleto, 33, 95, 23, 27);
         explosiones[14] = new TextureRegion(explosionCompleto, 65, 95, 23, 27);
         explosiones[15] = new TextureRegion(explosionCompleto, 95, 95, 23, 27);
-        explosion = new Animation<>(0.1f, explosiones);
+        explosion = new Animation<>(0.0599f, explosiones);
 
         regionActual = enemigoReposo;
         setSize(regionActual.getRegionWidth(), regionActual.getRegionHeight());
@@ -72,7 +71,7 @@ public class Enemigo extends Actor {
         super.act(delta);
 
         tiempo -= Gdx.graphics.getDeltaTime();
-        if(tiempo < 0) {
+        if(tiempo < 0 && this.isVisible()) {
             DisparosEnemigo disparosEnemigo = new DisparosEnemigo(getX(), getY());
             disparosEnemigo.setVisible(true);
             stage.addActor(disparosEnemigo);
@@ -87,6 +86,7 @@ public class Enemigo extends Actor {
             stateTime += 0;
             if(explosion.isAnimationFinished(stateTime)){
                 muerto = false;
+                this.setVisible(false);
                 remove();
             }
 
@@ -116,4 +116,8 @@ public class Enemigo extends Actor {
         addAction(currentAction);
     }
 
+    public void explotar(){
+        muerto = true;
+        stateTime = 0;
+    }
 }

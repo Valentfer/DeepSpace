@@ -12,19 +12,18 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class Mmarcianos extends ScreenAdapter {
 	DeepSpace game;
 	TiledMap map;
 	static Stage stage;
-	List<Enemigo> lEnemigo = new ArrayList<>();
-	List<Disparos> lDisparos = new ArrayList<>();
-	List<DisparosEnemigo> lDisparosEnemigo = new ArrayList<>();
+	Array<Enemigo> lEnemigo = new Array<>();
+	Array<Disparos> lDisparos = new Array<>();
+	Array<DisparosEnemigo> lDisparosEnemigo = new Array<>();
 	Heroe heroe;
 	Enemigo enemigo;
 	EnemigoJefe enemigoJefe;
@@ -66,6 +65,7 @@ public class Mmarcianos extends ScreenAdapter {
 			heroe = new Heroe(400, 100, stage, game, lDisparos);
 			PowerUp powerUp = new PowerUp();
 		    enemigoJefe = new EnemigoJefe(40, 10, stage, lDisparosEnemigo, game, camera);
+			enemigoJefe.setVisible(false);
 			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe);
 			stage.addActor(heroe);
 			stage.addActor(powerUp);
@@ -101,15 +101,16 @@ public class Mmarcianos extends ScreenAdapter {
 			}
 			for (Disparos lDisparo : lDisparos) {
 				if (lDisparo.getX() >= (camera.position.x + camera.viewportWidth / 2)) {
+					lDisparo.setVisible(false);
 					lDisparo.remove();
 					Actions.addAction(Actions.removeActor());
 				}
 			}
 			for (DisparosEnemigo disparosEnemigo : lDisparosEnemigo) {
 				if (disparosEnemigo.getX() <= (camera.position.x - camera.viewportWidth / 2)) {
+					disparosEnemigo.setVisible(false);
 					disparosEnemigo.remove();
 					Actions.addAction(Actions.removeActor());
-					disparosEnemigo.addAction(Actions.removeActor());
 				}
 			}
 

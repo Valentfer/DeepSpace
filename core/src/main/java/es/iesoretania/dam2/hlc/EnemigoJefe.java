@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class EnemigoJefe extends Actor {
     Stage stage;
     DeepSpace game;
-    List<DisparosEnemigo> ldisparosEnemigos;
+    Array<DisparosEnemigo> ldisparosEnemigos;
     Texture completoEneJefe;
     Texture hud;
     OrthographicCamera camera;
@@ -24,7 +25,7 @@ public class EnemigoJefe extends Actor {
             hudvida10;
     float tiempo;
     int vida = 10;
-    public EnemigoJefe( float x, float y, Stage stage, List<DisparosEnemigo> ldisparosEnemigos, DeepSpace game, OrthographicCamera camera){
+    public EnemigoJefe( float x, float y, Stage stage, Array<DisparosEnemigo> ldisparosEnemigos, DeepSpace game, OrthographicCamera camera){
         this.stage = stage;
         this.game = game;
         this.camera = camera;
@@ -71,7 +72,7 @@ public class EnemigoJefe extends Actor {
 
 
         tiempo -= Gdx.graphics.getDeltaTime();
-        if(tiempo < 0) {
+        if(tiempo < 0 && isVisible()) {
             DisparosEnemigo disparosEnemigo = new DisparosEnemigo(getX(), getY());
             disparosEnemigo.setVisible(true);
             stage.addActor(disparosEnemigo);

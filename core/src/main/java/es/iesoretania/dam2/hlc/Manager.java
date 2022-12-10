@@ -9,9 +9,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.badlogic.gdx.utils.Array;
 
 public class Manager extends Actor {
     Stage stage;
@@ -22,15 +20,14 @@ public class Manager extends Actor {
     Enemigo enemigo;
     EnemigoJefe enemigoJefe;
     Disparos disparos;
-    List<Disparos> lDisparos;
-    List<Enemigo> lEnemigo;
-    List<DisparosEnemigo> ldisparosEnemigos;
+    Array<Disparos> lDisparos;
+    Array<Enemigo> lEnemigo;
+    Array<DisparosEnemigo> ldisparosEnemigos;
     OrthographicCamera camera;
-    List<PowerUp> lPowerUp = new ArrayList<>();
-    boolean ganado = false;
+    Array<PowerUp> lPowerUp = new Array<>();
     public int score;
-    public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, List<Enemigo> lEnemigo,
-                   List<Disparos> lDisparos, List<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera, EnemigoJefe enemigoJefe) {
+    public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, Array<Enemigo> lEnemigo,
+                   Array<Disparos> lDisparos, Array<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera, EnemigoJefe enemigoJefe) {
         this.heroe = heroe;
         this.enemigo = enemigo;
         this.enemigoJefe = enemigoJefe;
@@ -72,8 +69,7 @@ public class Manager extends Actor {
         for (Enemigo value : lEnemigo) {
             if (!value.muerto && value.isVisible() && Intersector.overlaps(heroe.getShape(), value.getShape())) {
                 explosion.play();
-                value.muerto = true;
-                value.setVisible(false);
+                value.explotar();
                 heroe.tocado = true;
                 score -= 100;
             }
@@ -90,9 +86,8 @@ public class Manager extends Actor {
         for (Enemigo value : lEnemigo) {
             for (Disparos lDisparo : lDisparos) {
                 if (!value.muerto && value.isVisible() && lDisparo.isVisible() && Intersector.overlaps(lDisparo.getShape(), value.getShape())) {
-                    value.muerto = true;
-                    value.setVisible(false);
-                    lDisparo.remove();
+                    value.explotar();
+                    lDisparo.setVisible(false);
                     explosion.play();
                     score += 100;
                     if (heroe.vida < 3) {
