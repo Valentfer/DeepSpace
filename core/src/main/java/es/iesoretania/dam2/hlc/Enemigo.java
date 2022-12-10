@@ -50,7 +50,7 @@ public class Enemigo extends Actor {
         explosiones[13] = new TextureRegion(explosionCompleto, 33, 95, 23, 27);
         explosiones[14] = new TextureRegion(explosionCompleto, 65, 95, 23, 27);
         explosiones[15] = new TextureRegion(explosionCompleto, 95, 95, 23, 27);
-        explosion = new Animation<>(0.0599f, explosiones);
+        explosion = new Animation<>(0.05f, explosiones);
 
         regionActual = enemigoReposo;
         setSize(regionActual.getRegionWidth(), regionActual.getRegionHeight());
@@ -83,13 +83,11 @@ public class Enemigo extends Actor {
         if(muerto){
             stateTime += Gdx.graphics.getDeltaTime();
             regionActual =  explosion.getKeyFrame(stateTime,false);
-            stateTime += 0;
             if(explosion.isAnimationFinished(stateTime)){
                 muerto = false;
                 this.setVisible(false);
                 remove();
             }
-
         }
 
         if (getY() < 0) setY(0);

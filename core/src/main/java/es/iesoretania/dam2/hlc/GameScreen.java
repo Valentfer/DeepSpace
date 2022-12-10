@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 
-public class Mmarcianos extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter {
 	DeepSpace game;
 	TiledMap map;
 	static Stage stage;
@@ -36,13 +36,12 @@ public class Mmarcianos extends ScreenAdapter {
 	int[] capanormal = {0,1,2};
 	int[] capaAlta = {3};
 	float tiempo;
-	public Mmarcianos(DeepSpace game){
+	public GameScreen(DeepSpace game){
 		this.game = game;
 			map = new TmxMapLoader().load("espaciobueno.tmx");
 			mapRenderer = new OrthogonalTiledMapRenderer(map);
 
 			Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
-			space.setVolume(0);
 			space.setLooping(true);
 			space.play();
 
@@ -99,6 +98,14 @@ public class Mmarcianos extends ScreenAdapter {
 			if(heroe.getX()>= (camera.position.x + camera.viewportWidth / 2) - heroe.getWidth()){
 				heroe.setX((camera.position.x + camera.viewportWidth / 2) - heroe.getWidth());
 			}
+
+			if(enemigoJefe.getX() <= (camera.position.x - camera.viewportWidth /2) + enemigoJefe.getWidth()){
+				enemigoJefe.setX((camera.position.x - camera.viewportWidth /2)+ enemigoJefe.getWidth());
+			}
+			if(enemigoJefe.getX()>= (camera.position.x + camera.viewportWidth / 2) - enemigoJefe.getWidth()){
+				enemigoJefe.setX((camera.position.x + camera.viewportWidth / 2) - enemigoJefe.getWidth());
+			}
+
 			for (Disparos lDisparo : lDisparos) {
 				if (lDisparo.getX() >= (camera.position.x + camera.viewportWidth / 2)) {
 					lDisparo.setVisible(false);

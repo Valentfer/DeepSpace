@@ -42,7 +42,6 @@ public class TheEndScreen extends ScreenAdapter {
             x = Gdx.graphics.getWidth() * .25f;
             game.font.draw(game.batch, "¡Game over!", x, height * .75f);
         }
-        //game.font.draw(game.batch, "¡Puntos: " + Manager.sco, x, height * .75f);
         game.font.draw(game.batch, "Presiona Intro para volver a empezar.", x, height * .25f);
         game.batch.end();
 

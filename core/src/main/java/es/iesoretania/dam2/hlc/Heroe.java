@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.List;
 
 import static com.badlogic.gdx.Input.Keys.SPACE;
 
@@ -20,8 +19,7 @@ public class Heroe extends Actor {
     Stage stage;
     Sound shot;
     DeepSpace game;
-    public float vida = 3;
-    boolean tocado = false;
+    public int vida = 3;
     Array<Disparos> lDisparos;
     enum VerticalMovement { UP, NONE, DOWN }
     enum HorizontalMovement { LEFT, NONE, RIGHT }
@@ -30,6 +28,7 @@ public class Heroe extends Actor {
     private static Animation<TextureRegion> explosion;
     float stateTime;
     boolean ganado = false;
+    boolean muerto = false;
     TextureRegion regionActual, naveReposo, naveArriba, naveAbajo;
     Texture completoExplosion, completoNave;
     public Heroe(float x, float y, Stage stage, DeepSpace game, Array<Disparos> lDisparos) {
@@ -46,7 +45,7 @@ public class Heroe extends Actor {
         setSize(regionActual.getRegionWidth(), regionActual.getRegionHeight() );
         setPosition(x - getWidth() / 2, y - getHeight() / 2);
 
-        //EXPLOSIONES
+
         completoExplosion = new Texture(Gdx.files.internal("explosionHeroe.png"));
         TextureRegion[] explosiones = new TextureRegion[5];
         explosiones[0] = new TextureRegion(completoExplosion, 2, 5, 25, 26);
@@ -54,7 +53,7 @@ public class Heroe extends Actor {
         explosiones[2] = new TextureRegion(completoExplosion, 2, 36, 25, 26);
         explosiones[3] = new TextureRegion(completoExplosion, 35, 36, 25, 26);
         explosiones[4] = new TextureRegion(completoExplosion, 2, 68, 25, 26);
-        explosion = new Animation<>(0.1f, explosiones);
+        explosion = new Animation<>(0.051f, explosiones);
 
         stateTime = 0;
     }
@@ -66,15 +65,13 @@ public class Heroe extends Actor {
     @Override
     public void act(float delta) {
         processKeyboard();
-        if(tocado){
-            vida--;
-            tocado = false;
-        }
-        if(vida <= 0){
+
+        if(muerto){
             stateTime += Gdx.graphics.getDeltaTime();
             regionActual = explosion.getKeyFrame(stateTime,false);
-            stateTime = 0;
             if(explosion.isAnimationFinished(stateTime)){
+                muerto = false;
+                this.setVisible(false);
                 game.setScreen(new TheEndScreen(game, ganado));
             }
         }
@@ -131,8 +128,12 @@ public class Heroe extends Actor {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
-//    public void explotar(){
-//
-//    }
+    public void setTocado(){
+            vida--;
+            if(vida == 0){
+                muerto = true;
+                stateTime = 0;
+            }
+    }
 }
 

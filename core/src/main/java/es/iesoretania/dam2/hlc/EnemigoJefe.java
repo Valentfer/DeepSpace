@@ -5,12 +5,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.List;
 
 
 public class EnemigoJefe extends Actor {
@@ -25,15 +29,21 @@ public class EnemigoJefe extends Actor {
             hudvida10;
     float tiempo;
     int vida = 10;
+
     public EnemigoJefe( float x, float y, Stage stage, Array<DisparosEnemigo> ldisparosEnemigos, DeepSpace game, OrthographicCamera camera){
         this.stage = stage;
         this.game = game;
         this.camera = camera;
-         this.ldisparosEnemigos = ldisparosEnemigos;
+        this.ldisparosEnemigos = ldisparosEnemigos;
         completoEneJefe = new Texture(Gdx.files.internal("AlienJefe.png"));
         enemigoJefe = new TextureRegion(completoEneJefe,1,1,716,546);
         setSize((float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight() / 5);
         setPosition(camera.position.x + camera.viewportWidth /2, camera.position.y - camera.viewportHeight /2);
+        MoveToAction mov1 = Actions.moveTo(MathUtils.random(x - 400), MathUtils.random(y - 400));
+        MoveToAction mov2 = Actions.moveTo(MathUtils.random(x + 400), MathUtils.random(y + 400));
+        SequenceAction seq = Actions.sequence(mov1, mov2);
+        Action currentAction = Actions.repeat(RepeatAction.FOREVER, seq);
+        this.addAction(currentAction);
 
         hud = new Texture(Gdx.files.internal("hud.png"));
         hudvida0 = new TextureRegion(hud,7,455, 254,45);
@@ -49,7 +59,7 @@ public class EnemigoJefe extends Actor {
         hudvida10 = new TextureRegion(hud,7,4, 254,45);
 
         setSize(hudvida0.getRegionWidth(), hudvida0.getRegionHeight());
-        setPosition(x, y + 100);
+        setPosition(x, y);
         tiempo = (float) (2 + Math.random());
     }
     @Override
@@ -62,16 +72,9 @@ public class EnemigoJefe extends Actor {
     public void act(float delta) {
         super.act(delta);
 
-        moveBy(50 * delta, -50 * delta);
-        if(getY() == 0) {
-            moveBy(50 * delta, 50 * delta);
-        }
-        if(getY() == camera.viewportHeight - enemigoJefe.getRegionHeight()) {
-            moveBy(50 * delta, -50 * delta);
-        }
+        moveBy(50 * delta, 0);
 
-
-        tiempo -= Gdx.graphics.getDeltaTime();
+        tiempo += Gdx.graphics.getDeltaTime();
         if(tiempo < 0 && isVisible()) {
             DisparosEnemigo disparosEnemigo = new DisparosEnemigo(getX(), getY());
             disparosEnemigo.setVisible(true);
@@ -122,6 +125,6 @@ public class EnemigoJefe extends Actor {
     }
 
     Rectangle getShape() {
-        return new Rectangle(getX(), getY(),getWidth(), getHeight());
+        return new Rectangle(enemigoJefe.getRegionX(), enemigoJefe.getRegionY(),enemigoJefe.getRegionWidth(), enemigoJefe.getRegionHeight());
     }
 }
