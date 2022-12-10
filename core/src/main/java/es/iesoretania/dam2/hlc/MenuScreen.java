@@ -17,7 +17,6 @@ public class MenuScreen extends ScreenAdapter {
     Stage stage;
     public MenuScreen(DeepSpace game) {
 
-
         this.game = game;
         stage = new Stage(new ScreenViewport());
 
@@ -25,7 +24,6 @@ public class MenuScreen extends ScreenAdapter {
         titulo.setAlignment(Align.center);
         titulo.setY(Gdx.graphics.getHeight() / 1.5f);
         titulo.setFontScale(5f);
-       // titulo.setStyle(S);
         titulo.setWidth(Gdx.graphics.getWidth());
         titulo.setColor(Color.BLUE);
         stage.addActor(titulo);
@@ -35,7 +33,7 @@ public class MenuScreen extends ScreenAdapter {
         empezar.setPosition(Gdx.graphics.getWidth() / 4f, Gdx.graphics.getHeight() /2f);
         empezar.addListener(new InputListener(){
             @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {game.setScreen( new Mmarcianos(game));}
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {game.setScreen( new GameScreen(game));}
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;

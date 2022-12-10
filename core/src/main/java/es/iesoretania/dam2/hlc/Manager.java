@@ -70,7 +70,7 @@ public class Manager extends Actor {
             if (!value.muerto && value.isVisible() && Intersector.overlaps(heroe.getShape(), value.getShape())) {
                 explosion.play();
                 value.explotar();
-                heroe.tocado = true;
+                heroe.setTocado();
                 score -= 100;
             }
         }
@@ -78,7 +78,7 @@ public class Manager extends Actor {
         for (DisparosEnemigo ldisparosEnemigo : ldisparosEnemigos) {
             if (heroe.isVisible() && ldisparosEnemigo.isVisible() && Intersector.overlaps(heroe.getShape(), ldisparosEnemigo.getShape())) {
                 ldisparosEnemigo.setVisible(false);
-                heroe.tocado = true;
+                heroe.setTocado();
                 score -= 100;
             }
         }
@@ -126,7 +126,7 @@ public class Manager extends Actor {
         }
 
         if(enemigoJefe.isVisible() && Intersector.overlaps(enemigoJefe.getShape(), heroe.getShape())) {
-            heroe.tocado = true;
+            heroe.setTocado();
             score -= 100;
         }
     }

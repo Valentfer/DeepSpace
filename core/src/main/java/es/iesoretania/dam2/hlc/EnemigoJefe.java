@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.List;
 
 
 public class EnemigoJefe extends Actor {
@@ -29,7 +28,7 @@ public class EnemigoJefe extends Actor {
         this.stage = stage;
         this.game = game;
         this.camera = camera;
-         this.ldisparosEnemigos = ldisparosEnemigos;
+        this.ldisparosEnemigos = ldisparosEnemigos;
         completoEneJefe = new Texture(Gdx.files.internal("AlienJefe.png"));
         enemigoJefe = new TextureRegion(completoEneJefe,1,1,716,546);
         setSize((float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight() / 5);
@@ -49,7 +48,7 @@ public class EnemigoJefe extends Actor {
         hudvida10 = new TextureRegion(hud,7,4, 254,45);
 
         setSize(hudvida0.getRegionWidth(), hudvida0.getRegionHeight());
-        setPosition(x, y + 100);
+        setPosition(x, y);
         tiempo = (float) (2 + Math.random());
     }
     @Override
