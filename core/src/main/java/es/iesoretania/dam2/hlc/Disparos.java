@@ -14,22 +14,20 @@ public class Disparos extends Actor {
     public Disparos(float x, float y) {
         disparo = new Texture("beams.png");
         laser = new TextureRegion(disparo, 8,11,12,17);
-        setPosition(x + 20, y - 20);
+        setPosition(x + 20, y);
         setRotation(90);
         setSize(laser.getRegionWidth(), laser.getRegionHeight());
     }
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(laser, getX(), getY(), getWidth(), getHeight());
+        batch.draw(laser, getX(), getY(), getOriginX(), getOriginY(), getWidth(), getHeight(), getScaleX(), getScaleY(), getRotation());
     }
     @Override
     public void act(float delta) {
         super.act(delta);
 
         moveBy(200 * Gdx.graphics.getDeltaTime(),0);
-        if(getX() >= 1000000){
-            remove();
-        }
+
     }
 
     Rectangle getShape() {

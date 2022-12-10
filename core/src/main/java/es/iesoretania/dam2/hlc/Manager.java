@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +20,7 @@ public class Manager extends Actor {
     private BitmapFont font;
     private final Heroe heroe;
     Enemigo enemigo;
+    EnemigoJefe enemigoJefe;
     Disparos disparos;
     List<Disparos> lDisparos;
     List<Enemigo> lEnemigo;
@@ -30,9 +30,10 @@ public class Manager extends Actor {
 
     public int score;
     public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, List<Enemigo> lEnemigo,
-                   List<Disparos> lDisparos, List<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera) {
+                   List<Disparos> lDisparos, List<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera, EnemigoJefe enemigoJefe) {
         this.heroe = heroe;
         this.enemigo = enemigo;
+        this.enemigoJefe = enemigoJefe;
         this.disparos = disparos;
         this.lDisparos= lDisparos;
         this.lEnemigo = lEnemigo;
@@ -54,11 +55,9 @@ public class Manager extends Actor {
     public void act(float delta) {
         super.act(delta);
         if(score == 1000){
-            EnemigoJefe enemigoJefe = new EnemigoJefe(camera.position.x , camera.position.y, stage, ldisparosEnemigos);
+            enemigoJefe = new EnemigoJefe(camera.position.x , camera.position.y, stage, ldisparosEnemigos, game,camera);
             enemigoJefe.setVisible(true);
             stage.addActor(enemigoJefe);
-            //            heroe.setX(100 * Gdx.graphics.getDeltaTime());
-//            game.setScreen(new PantallaJefe(game));
 
         }
 
@@ -110,18 +109,31 @@ public class Manager extends Actor {
             }
 
         }
-        for (int i = 0; i < lDisparos.size(); i++) {
-            for (int j = 0; j < ldisparosEnemigos.size(); j++) {
-                if(ldisparosEnemigos.get(j).isVisible() && lDisparos.get(i).isVisible() &&
-                        Intersector.overlaps(lDisparos.get(i).getShape(), ldisparosEnemigos.get(j).getShape())){
-                    lDisparos.get(i).setVisible(false);
-                    ldisparosEnemigos.get(j).setVisible(false);
-                    ldisparosEnemigos.get(j).remove();
-                    lDisparos.get(i).remove();
+        for (Disparos lDisparo : lDisparos) {
+            for (DisparosEnemigo ldisparosEnemigo : ldisparosEnemigos) {
+                if (ldisparosEnemigo.isVisible() && lDisparo.isVisible() &&
+                        Intersector.overlaps(lDisparo.getShape(), ldisparosEnemigo.getShape())) {
+                    lDisparo.setVisible(false);
+                    ldisparosEnemigo.setVisible(false);
+                    ldisparosEnemigo.remove();
+                    lDisparo.remove();
                 }
 
             }
 
         }
+
+        for (Disparos lDisparo : lDisparos) {
+            if (lDisparo.isVisible() && Intersector.overlaps(lDisparo.getShape(), enemigoJefe.getShape())) {
+                enemigoJefe.vida--;
+                score += 100;
+            }
+        }
+
+        if(enemigoJefe.isVisible() && Intersector.overlaps(enemigoJefe.getShape(), heroe.getShape())) {
+            heroe.tocado = true;
+            score -= 100;
+        }
+
     }
 }

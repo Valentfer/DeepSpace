@@ -26,6 +26,7 @@ public class Mmarcianos extends ScreenAdapter {
 	List<DisparosEnemigo> lDisparosEnemigo = new ArrayList<>();
 	Heroe heroe;
 	Enemigo enemigo;
+	EnemigoJefe enemigoJefe;
 	Disparos disparos;
 	OrthographicCamera camera;
 	OrthogonalTiledMapRenderer mapRenderer;
@@ -63,8 +64,8 @@ public class Mmarcianos extends ScreenAdapter {
 			stage = new Stage();
 			heroe = new Heroe(400, 100, stage, game, lDisparos);
 			PowerUp powerUp = new PowerUp();
-
-			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera);
+		    enemigoJefe = new EnemigoJefe(400, 100, stage, lDisparosEnemigo, game, camera);
+			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe);
 			stage.addActor(heroe);
 			stage.addActor(powerUp);
 			stage.addActor(score);
@@ -89,7 +90,6 @@ public class Mmarcianos extends ScreenAdapter {
 				tiempo = (float) (2 + Math.random());
 			}
 
-
 			if (offsetX > mapWidthInPixels - camera.viewportWidth) offsetX = mapWidthInPixels - camera.viewportWidth;
 			if (offsetY < -mapHeightInPixels + camera.viewportHeight) offsetY = -mapHeightInPixels + camera.viewportHeight;
 			if(heroe.getX() <= (camera.position.x - camera.viewportWidth /2) + heroe.getWidth()){
@@ -103,17 +103,21 @@ public class Mmarcianos extends ScreenAdapter {
 					lDisparo.remove();
 				}
 			}
-
+			for (DisparosEnemigo disparosEnemigo : lDisparosEnemigo) {
+				if (disparosEnemigo.getX() <= (camera.position.x - camera.viewportWidth / 2)) {
+					disparosEnemigo.remove();
+				}
+			}
 
 			camera.translate(50 * Gdx.graphics.getDeltaTime(),0);
 			if(camera.position.x > mapWidthInPixels-camera.viewportWidth) {
 				camera.position.x = camera.viewportWidth / 2 + offsetX;
 				heroe.setX((int) camera.position.x);
+				enemigoJefe.setX(camera.position.x + camera.viewportWidth / 2);
 			}
 
 			camera.position.y =  camera.viewportHeight / 2 + offsetY;
 			camera.update();
-
 
 			stage.act(Gdx.graphics.getDeltaTime());
 			mapRenderer.setView(camera);

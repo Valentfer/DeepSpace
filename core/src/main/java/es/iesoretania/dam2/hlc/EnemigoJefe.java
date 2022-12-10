@@ -1,43 +1,40 @@
 package es.iesoretania.dam2.hlc;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
-import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
-import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 
 import java.util.List;
 
 
 public class EnemigoJefe extends Actor {
     Stage stage;
+    DeepSpace game;
     List<DisparosEnemigo> ldisparosEnemigos;
     Texture completoEneJefe;
     Texture hud;
+    OrthographicCamera camera;
     TextureRegion enemigoJefe;
     TextureRegion hudvida0, hudvida1, hudvida2, hudvida3, hudvida4, hudvida5, hudvida6, hudvida7, hudvida8, hudvida9,
             hudvida10;
-    private Action currentAction;
     float tiempo;
-    int vida = 11;
-    public EnemigoJefe( float x, float y, Stage stage, List<DisparosEnemigo> ldisparosEnemigos){
+    int vida = 10;
+    public EnemigoJefe( float x, float y, Stage stage, List<DisparosEnemigo> ldisparosEnemigos, DeepSpace game, OrthographicCamera camera){
         this.stage = stage;
+        this.game = game;
+        this.camera = camera;
          this.ldisparosEnemigos = ldisparosEnemigos;
         completoEneJefe = new Texture(Gdx.files.internal("AlienJefe.png"));
         enemigoJefe = new TextureRegion(completoEneJefe,1,1,716,546);
-        setSize(enemigoJefe.getRegionWidth() / 5, enemigoJefe.getRegionHeight() / 5);
-        setVisible(true);
-        setPosition(x, y);
-        //    animaciones(x,y);
+        setSize((float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight() / 5);
+        setPosition(camera.position.x + camera.viewportWidth /2, camera.position.y + camera.viewportHeight /2);
+
+
 
         hud = new Texture(Gdx.files.internal("hud.png"));
         hudvida0 = new TextureRegion(hud,7,455, 254,45);
@@ -54,11 +51,12 @@ public class EnemigoJefe extends Actor {
 
         setSize(hudvida0.getRegionWidth(), hudvida0.getRegionHeight());
         setPosition(x, y + 100);
+        tiempo = (float) (2 + Math.random());
     }
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(enemigoJefe, getX(), getY(), getWidth(), getHeight());
-        batch.draw(hudvida10, getX(), getY(), getWidth(), getHeight());
+        batch.draw(enemigoJefe, getX(), getY(), (float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight());
+        batch.draw(hudvida10, getX(), hudvida0.getRegionY() , hudvida0.getRegionWidth(), hudvida0.getRegionHeight());
     }
 
     @Override
@@ -75,6 +73,10 @@ public class EnemigoJefe extends Actor {
             ldisparosEnemigos.add(disparosEnemigo);
 
             tiempo = (float) (2 + Math.random());
+        }
+
+        if(vida == 0){
+            game.setScreen(new TheEndScreen(game));
         }
 
         switch (vida){
@@ -114,13 +116,5 @@ public class EnemigoJefe extends Actor {
 
     Rectangle getShape() {
         return new Rectangle(getX(), getY(),getWidth(), getHeight());
-    }
-    private void animaciones(float x, float y) {
-        removeAction(currentAction);
-        MoveToAction movimiento1 = Actions.moveTo(MathUtils.random(x - 400), MathUtils.random(y + 400), 7f, Interpolation.sine);
-
-        SequenceAction sequence = Actions.sequence(movimiento1);
-        currentAction = Actions.repeat(RepeatAction.FOREVER, sequence);
-        addAction(currentAction);
     }
 }
