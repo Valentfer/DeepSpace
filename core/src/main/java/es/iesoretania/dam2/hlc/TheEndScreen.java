@@ -8,9 +8,12 @@ import com.badlogic.gdx.graphics.GL20;
 
 public class TheEndScreen extends ScreenAdapter {
         DeepSpace game;
+        boolean ganado;
 
-    public TheEndScreen(DeepSpace game) {
+    public TheEndScreen(DeepSpace game, boolean ganado) {
+
         this.game = game;
+        this.ganado = ganado;
     }
     @Override
     public void show() {
@@ -29,11 +32,20 @@ public class TheEndScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(.25f, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
-        float x = Gdx.graphics.getWidth() * .25f;
+        float x;
         int height = Gdx.graphics.getHeight();
-        game.font.draw(game.batch, "¡Game over!", x, height * .75f);
+
+        if(ganado){
+            x = Gdx.graphics.getWidth() * .25f;
+            game.font.draw(game.batch, "¡Has ganado!", x, height * .75f);
+        }else{
+            x = Gdx.graphics.getWidth() * .25f;
+            game.font.draw(game.batch, "¡Game over!", x, height * .75f);
+        }
+        //game.font.draw(game.batch, "¡Puntos: " + Manager.sco, x, height * .75f);
         game.font.draw(game.batch, "Presiona Intro para volver a empezar.", x, height * .25f);
         game.batch.end();
+
     }
     @Override
     public void hide() {

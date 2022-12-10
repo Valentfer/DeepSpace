@@ -11,6 +11,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -64,7 +65,7 @@ public class Mmarcianos extends ScreenAdapter {
 			stage = new Stage();
 			heroe = new Heroe(400, 100, stage, game, lDisparos);
 			PowerUp powerUp = new PowerUp();
-		    enemigoJefe = new EnemigoJefe(400, 100, stage, lDisparosEnemigo, game, camera);
+		    enemigoJefe = new EnemigoJefe(40, 10, stage, lDisparosEnemigo, game, camera);
 			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe);
 			stage.addActor(heroe);
 			stage.addActor(powerUp);
@@ -83,7 +84,7 @@ public class Mmarcianos extends ScreenAdapter {
 
 			tiempo -= Gdx.graphics.getDeltaTime();
 			if(tiempo < 0) {
-				Enemigo enemigo = new Enemigo(400,100, heroe,camera, stage, lDisparosEnemigo);
+				Enemigo enemigo = new Enemigo(40,10, heroe,camera, stage, lDisparosEnemigo);
 				enemigo.setVisible(true);
 				stage.addActor(enemigo);
 				lEnemigo.add(enemigo);
@@ -101,11 +102,14 @@ public class Mmarcianos extends ScreenAdapter {
 			for (Disparos lDisparo : lDisparos) {
 				if (lDisparo.getX() >= (camera.position.x + camera.viewportWidth / 2)) {
 					lDisparo.remove();
+					Actions.addAction(Actions.removeActor());
 				}
 			}
 			for (DisparosEnemigo disparosEnemigo : lDisparosEnemigo) {
 				if (disparosEnemigo.getX() <= (camera.position.x - camera.viewportWidth / 2)) {
 					disparosEnemigo.remove();
+					Actions.addAction(Actions.removeActor());
+					disparosEnemigo.addAction(Actions.removeActor());
 				}
 			}
 

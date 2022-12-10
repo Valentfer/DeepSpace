@@ -82,7 +82,7 @@ public class Enemigo extends Actor {
         }
 
         if(muerto){
-            stateTime += delta;
+            stateTime += Gdx.graphics.getDeltaTime();
             regionActual =  explosion.getKeyFrame(stateTime,false);
             stateTime += 0;
             if(explosion.isAnimationFinished(stateTime)){

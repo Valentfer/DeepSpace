@@ -32,9 +32,7 @@ public class EnemigoJefe extends Actor {
         completoEneJefe = new Texture(Gdx.files.internal("AlienJefe.png"));
         enemigoJefe = new TextureRegion(completoEneJefe,1,1,716,546);
         setSize((float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight() / 5);
-        setPosition(camera.position.x + camera.viewportWidth /2, camera.position.y + camera.viewportHeight /2);
-
-
+        setPosition(camera.position.x + camera.viewportWidth /2, camera.position.y - camera.viewportHeight /2);
 
         hud = new Texture(Gdx.files.internal("hud.png"));
         hudvida0 = new TextureRegion(hud,7,455, 254,45);
@@ -55,7 +53,7 @@ public class EnemigoJefe extends Actor {
     }
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(enemigoJefe, getX(), getY(), (float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight());
+        batch.draw(enemigoJefe, getX(), getY() - 200, (float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight()/5);
         batch.draw(hudvida10, getX(), hudvida0.getRegionY() , hudvida0.getRegionWidth(), hudvida0.getRegionHeight());
     }
 
@@ -63,7 +61,14 @@ public class EnemigoJefe extends Actor {
     public void act(float delta) {
         super.act(delta);
 
-        moveBy(50 * delta, 0);
+        moveBy(50 * delta, -50 * delta);
+        if(getY() == 0) {
+            moveBy(50 * delta, 50 * delta);
+        }
+        if(getY() == camera.viewportHeight - enemigoJefe.getRegionHeight()) {
+            moveBy(50 * delta, -50 * delta);
+        }
+
 
         tiempo -= Gdx.graphics.getDeltaTime();
         if(tiempo < 0) {
@@ -75,8 +80,9 @@ public class EnemigoJefe extends Actor {
             tiempo = (float) (2 + Math.random());
         }
 
-        if(vida == 0){
-            game.setScreen(new TheEndScreen(game));
+        if(vida <= 0){
+            boolean ganado = true;
+            game.setScreen(new TheEndScreen(game, ganado));
         }
 
         switch (vida){

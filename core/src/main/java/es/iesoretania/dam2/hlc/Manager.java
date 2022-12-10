@@ -27,7 +27,7 @@ public class Manager extends Actor {
     List<DisparosEnemigo> ldisparosEnemigos;
     OrthographicCamera camera;
     List<PowerUp> lPowerUp = new ArrayList<>();
-
+    boolean ganado = false;
     public int score;
     public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, List<Enemigo> lEnemigo,
                    List<Disparos> lDisparos, List<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera, EnemigoJefe enemigoJefe) {
@@ -124,7 +124,7 @@ public class Manager extends Actor {
         }
 
         for (Disparos lDisparo : lDisparos) {
-            if (lDisparo.isVisible() && Intersector.overlaps(lDisparo.getShape(), enemigoJefe.getShape())) {
+            if (lDisparo.isVisible()&& enemigoJefe.isVisible() && Intersector.overlaps(lDisparo.getShape(), enemigoJefe.getShape())) {
                 enemigoJefe.vida--;
                 score += 100;
             }
@@ -134,6 +134,5 @@ public class Manager extends Actor {
             heroe.tocado = true;
             score -= 100;
         }
-
     }
 }
