@@ -19,6 +19,7 @@ public class Manager extends Actor {
     private final Heroe heroe;
     Enemigo enemigo;
     EnemigoJefe enemigoJefe;
+    HudEnemigo hudEnemigo;
     Disparos disparos;
     Array<Disparos> lDisparos;
     Array<Enemigo> lEnemigo;
@@ -27,10 +28,12 @@ public class Manager extends Actor {
     Array<PowerUp> lPowerUp = new Array<>();
     public int score;
     public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, Array<Enemigo> lEnemigo,
-                   Array<Disparos> lDisparos, Array<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera, EnemigoJefe enemigoJefe) {
+                   Array<Disparos> lDisparos, Array<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera,
+                   EnemigoJefe enemigoJefe, HudEnemigo hudEnemigo) {
         this.heroe = heroe;
         this.enemigo = enemigo;
         this.enemigoJefe = enemigoJefe;
+        this.hudEnemigo = hudEnemigo;
         this.disparos = disparos;
         this.lDisparos= lDisparos;
         this.lEnemigo = lEnemigo;
@@ -52,9 +55,13 @@ public class Manager extends Actor {
     public void act(float delta) {
         super.act(delta);
         if(score == 1000){
-            enemigoJefe = new EnemigoJefe(camera.position.x , camera.position.y, stage, ldisparosEnemigos, game,camera);
+            enemigoJefe = new EnemigoJefe(camera.position.x + (camera.viewportWidth /2), camera.position.y , stage, ldisparosEnemigos, game,camera);
             enemigoJefe.setVisible(true);
             stage.addActor(enemigoJefe);
+
+            hudEnemigo = new HudEnemigo( stage, game,camera);
+            hudEnemigo.setVisible(true);
+            stage.addActor(hudEnemigo);
 
         }
 
@@ -62,6 +69,7 @@ public class Manager extends Actor {
             if (up.isVisible() && Intersector.overlaps(heroe.getShape(), up.getShape())) {
                 up.setVisible(false);
                 heroe.vida++;
+                heroe.setpuntosPos();
                 score += 100;
             }
         }
@@ -71,6 +79,7 @@ public class Manager extends Actor {
                 explosion.play();
                 value.explotar();
                 heroe.setTocado();
+                heroe.setpuntosNeg();
                 score -= 100;
             }
         }
@@ -79,6 +88,7 @@ public class Manager extends Actor {
             if (heroe.isVisible() && ldisparosEnemigo.isVisible() && Intersector.overlaps(heroe.getShape(), ldisparosEnemigo.getShape())) {
                 ldisparosEnemigo.setVisible(false);
                 heroe.setTocado();
+                heroe.setpuntosNeg();
                 score -= 100;
             }
         }
@@ -89,6 +99,7 @@ public class Manager extends Actor {
                     value.explotar();
                     lDisparo.setVisible(false);
                     explosion.play();
+                    heroe.setpuntosPos();
                     score += 100;
                     if (heroe.vida < 3) {
                         if (MathUtils.randomBoolean()) {
@@ -121,7 +132,14 @@ public class Manager extends Actor {
         for (Disparos lDisparo : lDisparos) {
             if (lDisparo.isVisible()&& enemigoJefe.isVisible() && Intersector.overlaps(lDisparo.getShape(), enemigoJefe.getShape())) {
                 enemigoJefe.vida--;
+                hudEnemigo.quitarVida();
                 score += 100;
+                heroe.setpuntosPos();
+                if(enemigoJefe.vida == 0) {
+                    boolean ganado = true;
+                    game.setScreen(new TheEndScreen(game, ganado, score));
+
+                }
             }
         }
 

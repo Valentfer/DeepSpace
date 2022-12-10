@@ -20,6 +20,7 @@ public class Heroe extends Actor {
     Sound shot;
     DeepSpace game;
     public int vida = 3;
+    int score = 0;
     Array<Disparos> lDisparos;
     enum VerticalMovement { UP, NONE, DOWN }
     enum HorizontalMovement { LEFT, NONE, RIGHT }
@@ -72,7 +73,7 @@ public class Heroe extends Actor {
             if(explosion.isAnimationFinished(stateTime)){
                 muerto = false;
                 this.setVisible(false);
-                game.setScreen(new TheEndScreen(game, ganado));
+                game.setScreen(new TheEndScreen(game, ganado, score));
             }
         }
 
@@ -135,5 +136,12 @@ public class Heroe extends Actor {
                 stateTime = 0;
             }
     }
+    public void setpuntosNeg(){
+        score -=100;
+    }
+    public void setpuntosPos(){
+        score +=100;
+    }
+
 }
 

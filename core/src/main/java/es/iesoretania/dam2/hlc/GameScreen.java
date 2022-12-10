@@ -27,6 +27,7 @@ public class GameScreen extends ScreenAdapter {
 	Heroe heroe;
 	Enemigo enemigo;
 	EnemigoJefe enemigoJefe;
+	HudEnemigo hudEnemigo;
 	Disparos disparos;
 	OrthographicCamera camera;
 	OrthogonalTiledMapRenderer mapRenderer;
@@ -42,6 +43,7 @@ public class GameScreen extends ScreenAdapter {
 			mapRenderer = new OrthogonalTiledMapRenderer(map);
 
 			Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
+			space.setVolume(0);
 			space.setLooping(true);
 			space.play();
 
@@ -63,9 +65,11 @@ public class GameScreen extends ScreenAdapter {
 			stage = new Stage();
 			heroe = new Heroe(400, 100, stage, game, lDisparos);
 			PowerUp powerUp = new PowerUp();
-		    enemigoJefe = new EnemigoJefe(40, 10, stage, lDisparosEnemigo, game, camera);
+		    enemigoJefe = new EnemigoJefe(0, 0, stage, lDisparosEnemigo, game, camera);
 			enemigoJefe.setVisible(false);
-			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe);
+			hudEnemigo = new HudEnemigo(stage,game,camera);
+			hudEnemigo.setVisible(false);
+			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe, hudEnemigo);
 			stage.addActor(heroe);
 			stage.addActor(powerUp);
 			stage.addActor(score);
