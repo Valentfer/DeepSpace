@@ -53,7 +53,7 @@ public class Heroe extends Actor {
         explosiones[2] = new TextureRegion(completoExplosion, 2, 36, 25, 26);
         explosiones[3] = new TextureRegion(completoExplosion, 35, 36, 25, 26);
         explosiones[4] = new TextureRegion(completoExplosion, 2, 68, 25, 26);
-        explosion = new Animation<>(0.5f, explosiones);
+        explosion = new Animation<>(0.599f, explosiones);
 
         stateTime = 0;
     }
@@ -66,14 +66,7 @@ public class Heroe extends Actor {
     public void act(float delta) {
         processKeyboard();
 
-        if(vida == 0){
-            stateTime += Gdx.graphics.getDeltaTime();
-            regionActual = explosion.getKeyFrame(stateTime,false);
-            if(explosion.isAnimationFinished(stateTime)){
-                this.setVisible(false);
-                game.setScreen(new TheEndScreen(game, ganado, score));
-            }
-        }
+
 
 
         if (verticalMovement == VerticalMovement.UP) this.moveBy(0, 200 * delta);
@@ -110,6 +103,15 @@ public class Heroe extends Actor {
             regionActual = naveAbajo;
         if (verticalMovement == VerticalMovement.DOWN && horizontalMovement == HorizontalMovement.RIGHT)
             regionActual = naveAbajo;
+
+        if(vida <= 0){
+            stateTime += Gdx.graphics.getDeltaTime();
+            regionActual = explosion.getKeyFrame(stateTime,false);
+            if(explosion.isAnimationFinished(stateTime)){
+                setVisible(false);
+                game.setScreen(new TheEndScreen(game, ganado, score));
+            }
+        }
     }
     public void processKeyboard() {
         verticalMovement = VerticalMovement.NONE;

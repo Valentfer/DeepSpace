@@ -18,143 +18,146 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 
 public class GameScreen extends ScreenAdapter {
-	DeepSpace game;
-	TiledMap map;
-	static Stage stage;
-	Array<Enemigo> lEnemigo = new Array<>();
-	Array<Disparos> lDisparos = new Array<>();
-	Array<DisparosEnemigo> lDisparosEnemigo = new Array<>();
-	Heroe heroe;
-	Enemigo enemigo;
-	EnemigoJefe enemigoJefe;
-	HudEnemigo hudEnemigo;
-	Disparos disparos;
-	OrthographicCamera camera;
-	OrthogonalTiledMapRenderer mapRenderer;
-	private final int mapWidthInPixels;
-	private final int mapHeightInPixels;
-	private float offsetX, offsetY;
-	int[] capanormal = {0,1,2};
-	int[] capaAlta = {3};
-	float tiempo;
-	public GameScreen(DeepSpace game){
-		this.game = game;
-			map = new TmxMapLoader().load("espaciobueno.tmx");
-			mapRenderer = new OrthogonalTiledMapRenderer(map);
+    DeepSpace game;
+    TiledMap map;
+    static Stage stage;
+    Array<Enemigo> lEnemigo = new Array<>();
+    Array<Disparos> lDisparos = new Array<>();
+    Array<DisparosEnemigo> lDisparosEnemigo = new Array<>();
+    Heroe heroe;
+    Enemigo enemigo;
+    EnemigoJefe enemigoJefe;
+    HudEnemigo hudEnemigo;
+    Disparos disparos;
+    OrthographicCamera camera;
+    OrthogonalTiledMapRenderer mapRenderer;
+    private final int mapWidthInPixels;
+    private final int mapHeightInPixels;
+    private float offsetX, offsetY;
+    int[] capanormal = {0, 1, 2};
+    int[] capaAlta = {3};
+    float tiempo;
 
-			Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
-			space.setLooping(true);
-			space.play();
+    public GameScreen(DeepSpace game) {
+        this.game = game;
+        map = new TmxMapLoader().load("espaciobueno.tmx");
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
 
-		MapProperties properties = map.getProperties();
-		int tileWidth = properties.get("tilewidth", Integer.class);
-		int tileHeight = properties.get("tileheight", Integer.class);
-		int mapWidthInTiles = properties.get("width", Integer.class);
-		int mapHeightInTiles = properties.get("height", Integer.class);
-		mapWidthInPixels = mapWidthInTiles * tileWidth;
-		mapHeightInPixels = mapHeightInTiles * tileHeight;
+        Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
+        space.setLooping(true);
+        space.play();
 
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
-		camera.position.x = camera.viewportWidth / 2;
-		camera.position.y = mapHeightInPixels - camera.viewportHeight / 2;
-		offsetX = 0;
-		offsetY = -mapHeightInPixels;
+        MapProperties properties = map.getProperties();
+        int tileWidth = properties.get("tilewidth", Integer.class);
+        int tileHeight = properties.get("tileheight", Integer.class);
+        int mapWidthInTiles = properties.get("width", Integer.class);
+        int mapHeightInTiles = properties.get("height", Integer.class);
+        mapWidthInPixels = mapWidthInTiles * tileWidth;
+        mapHeightInPixels = mapHeightInTiles * tileHeight;
 
-			stage = new Stage();
-			heroe = new Heroe(400, 100, stage, game, lDisparos);
-			PowerUp powerUp = new PowerUp();
-		    enemigoJefe = new EnemigoJefe(stage, lDisparosEnemigo, game, camera);
-			enemigoJefe.setVisible(false);
-			hudEnemigo = new HudEnemigo(stage,game,camera);
-			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe, hudEnemigo);
-			stage.addActor(heroe);
-			stage.addActor(powerUp);
-			stage.addActor(score);
-			stage.setKeyboardFocus(heroe);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 800, 480);
+        camera.position.x = camera.viewportWidth / 2;
+        camera.position.y = mapHeightInPixels - camera.viewportHeight / 2;
+        offsetX = 0;
+        offsetY = -mapHeightInPixels;
 
-			Viewport viewport = new ScreenViewport(camera);
-			stage.setViewport(viewport);
-			tiempo = (float) (2 + Math.random());
-		}
+        stage = new Stage();
+        heroe = new Heroe(400, 100, stage, game, lDisparos);
+        PowerUp powerUp = new PowerUp();
+        enemigoJefe = new EnemigoJefe(stage, lDisparosEnemigo, game, camera);
+        enemigoJefe.setVisible(false);
+        hudEnemigo = new HudEnemigo(stage, game, camera);
+        Actor score = new Manager(heroe, game, enemigo, disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe, hudEnemigo);
+        stage.addActor(heroe);
+        stage.addActor(powerUp);
+        stage.addActor(score);
+        stage.setKeyboardFocus(heroe);
 
-		@Override
-		public void render(float delta) {
-		Gdx.gl.glClearColor(0, 0, 0f, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Viewport viewport = new ScreenViewport(camera);
+        stage.setViewport(viewport);
+        tiempo = (float) (2 + Math.random());
+    }
 
-			tiempo -= Gdx.graphics.getDeltaTime();
-			if(tiempo < 0) {
-				Enemigo enemigo = new Enemigo(40,10, heroe,camera, stage, lDisparosEnemigo);
-				enemigo.setVisible(true);
-				stage.addActor(enemigo);
-				lEnemigo.add(enemigo);
-				tiempo = (float) (2 + Math.random());
-			}
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-			if (offsetX > mapWidthInPixels - camera.viewportWidth) offsetX = mapWidthInPixels - camera.viewportWidth;
-			if (offsetY < -mapHeightInPixels + camera.viewportHeight) offsetY = -mapHeightInPixels + camera.viewportHeight;
-			if(heroe.getX() <= (camera.position.x - camera.viewportWidth /2) + heroe.getWidth()){
-				heroe.setX((camera.position.x - camera.viewportWidth /2)+ heroe.getWidth());
-			}
-			if(heroe.getX()>= (camera.position.x + camera.viewportWidth / 2) - heroe.getWidth()){
-				heroe.setX((camera.position.x + camera.viewportWidth / 2) - heroe.getWidth());
-			}
+        tiempo -= Gdx.graphics.getDeltaTime();
+        if (tiempo < 0) {
+            Enemigo enemigo = new Enemigo(40, 10, heroe, camera, stage, lDisparosEnemigo);
+            enemigo.setVisible(true);
+            stage.addActor(enemigo);
+            lEnemigo.add(enemigo);
+            tiempo = (float) (2 + Math.random());
+        }
+
+        if (offsetX > mapWidthInPixels - camera.viewportWidth) offsetX = mapWidthInPixels - camera.viewportWidth;
+        if (offsetY < -mapHeightInPixels + camera.viewportHeight) offsetY = -mapHeightInPixels + camera.viewportHeight;
+        if (heroe.getX() <= (camera.position.x - camera.viewportWidth / 2) + heroe.getWidth()) {
+            heroe.setX((camera.position.x - camera.viewportWidth / 2) + heroe.getWidth());
+        }
+        if (heroe.getX() >= (camera.position.x + camera.viewportWidth / 2) - heroe.getWidth()) {
+            heroe.setX((camera.position.x + camera.viewportWidth / 2) - heroe.getWidth());
+        }
 
 
+        for (Disparos lDisparo : lDisparos) {
+            if (lDisparo.getX() >= (camera.position.x + camera.viewportWidth / 2)) {
+                lDisparo.setVisible(false);
+                lDisparo.remove();
+                Actions.addAction(Actions.removeActor());
+            }
+        }
+        for (DisparosEnemigo disparosEnemigo : lDisparosEnemigo) {
+            if (disparosEnemigo.getX() <= (camera.position.x - camera.viewportWidth / 2)) {
+                disparosEnemigo.setVisible(false);
+                disparosEnemigo.remove();
+                Actions.addAction(Actions.removeActor());
+            }
+        }
 
-			for (Disparos lDisparo : lDisparos) {
-				if (lDisparo.getX() >= (camera.position.x + camera.viewportWidth / 2)) {
-					lDisparo.setVisible(false);
-					lDisparo.remove();
-					Actions.addAction(Actions.removeActor());
-				}
-			}
-			for (DisparosEnemigo disparosEnemigo : lDisparosEnemigo) {
-				if (disparosEnemigo.getX() <= (camera.position.x - camera.viewportWidth / 2)) {
-					disparosEnemigo.setVisible(false);
-					disparosEnemigo.remove();
-					Actions.addAction(Actions.removeActor());
-				}
-			}
+        camera.translate(50 * Gdx.graphics.getDeltaTime(), 0);
+        if (camera.position.x > mapWidthInPixels - camera.viewportWidth) {
+            camera.position.x = camera.viewportWidth / 2 + offsetX;
+            heroe.setX((int) camera.position.x);
+            enemigoJefe.setX(camera.position.x);
+            hudEnemigo.setX(camera.position.x);
+        }
 
-			camera.translate(50 * Gdx.graphics.getDeltaTime(),0);
-			if(camera.position.x > mapWidthInPixels-camera.viewportWidth) {
-				camera.position.x = camera.viewportWidth / 2 + offsetX;
-				heroe.setX((int) camera.position.x);
-				enemigoJefe.setX(camera.position.x);
-				hudEnemigo.setX(camera.position.x);
-			}
+        camera.position.y = camera.viewportHeight / 2 + offsetY;
+        camera.update();
 
-			camera.position.y =  camera.viewportHeight / 2 + offsetY;
-			camera.update();
+        stage.act(Gdx.graphics.getDeltaTime());
+        mapRenderer.setView(camera);
+        mapRenderer.render(capanormal);
 
-			stage.act(Gdx.graphics.getDeltaTime());
-			mapRenderer.setView(camera);
-			mapRenderer.render(capanormal);
+        stage.draw();
+        mapRenderer.render(capaAlta);
+    }
 
-			stage.draw();
-			mapRenderer.render(capaAlta);
-		}
-	public void resize(int width, int height) {
-		super.resize(width, height);
-		camera.setToOrtho(false, width, height);
-		camera.position.x = camera.viewportWidth / 2 + offsetX;
-		camera.position.y = camera.viewportHeight / 2 + offsetY;
-		camera.update();
-	}
-	@Override
-	public void show() {
-		Gdx.input.setInputProcessor(stage);
-	}
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        camera.setToOrtho(false, width, height);
+        camera.position.x = camera.viewportWidth / 2 + offsetX;
+        camera.position.y = camera.viewportHeight / 2 + offsetY;
+        camera.update();
+    }
 
-	@Override
-	public void hide() {
-		Gdx.input.setInputProcessor(null);
-	}
-		@Override
-		public void dispose() {
-			map.dispose();
-			stage.dispose();
-		}
+    @Override
+    public void show() {
+        Gdx.input.setInputProcessor(stage);
+    }
+
+    @Override
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
+    }
+
+    @Override
+    public void dispose() {
+        map.dispose();
+        stage.dispose();
+    }
 }
