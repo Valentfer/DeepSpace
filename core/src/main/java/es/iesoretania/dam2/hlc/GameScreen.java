@@ -44,6 +44,7 @@ public class GameScreen extends ScreenAdapter {
         mapRenderer = new OrthogonalTiledMapRenderer(map);
 
         Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
+        space.setVolume(0);
         space.setLooping(true);
         space.play();
 

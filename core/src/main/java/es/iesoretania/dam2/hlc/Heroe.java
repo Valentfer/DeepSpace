@@ -28,6 +28,7 @@ public class Heroe extends Actor {
     VerticalMovement verticalMovement;
     private static Animation<TextureRegion> explosion;
     float stateTime;
+    float disparosSi;
     boolean ganado = false;
     TextureRegion regionActual, naveReposo, naveArriba, naveAbajo;
     Texture completoExplosion, completoNave;
@@ -55,6 +56,7 @@ public class Heroe extends Actor {
         explosiones[4] = new TextureRegion(completoExplosion, 2, 68, 25, 26);
         explosion = new Animation<>(0.599f, explosiones);
 
+        disparosSi = 0;
         stateTime = 0;
     }
 
@@ -65,7 +67,7 @@ public class Heroe extends Actor {
     @Override
     public void act(float delta) {
         processKeyboard();
-
+        disparosSi += delta;
 
 
 
@@ -74,12 +76,13 @@ public class Heroe extends Actor {
         if (horizontalMovement == HorizontalMovement.LEFT) this.moveBy(-200 * delta, 0);
         if (horizontalMovement == HorizontalMovement.RIGHT) this.moveBy(200 * delta, 0);
         if (horizontalMovement == HorizontalMovement.NONE) this.moveBy(50 * delta, 0);
-        if(Gdx.input.isKeyPressed(SPACE)){
+        if(Gdx.input.isKeyPressed(SPACE) && disparosSi >= 1){
             shot = Gdx.audio.newSound(Gdx.files.internal("shot 1.wav"));
             shot.play();
             Disparos disparos = new Disparos(getX(), getY());
             stage.addActor(disparos);
             lDisparos.add(disparos);
+            disparosSi = 0;
         }
         if(getY() <= 0){
             setY(0);
