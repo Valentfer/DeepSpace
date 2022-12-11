@@ -67,7 +67,7 @@ public class Heroe extends Actor {
     public void act(float delta) {
         processKeyboard();
 
-        if(muerto){
+        if(vida == 0){
             stateTime += Gdx.graphics.getDeltaTime();
             regionActual = explosion.getKeyFrame(stateTime,false);
             if(explosion.isAnimationFinished(stateTime)){
@@ -129,13 +129,6 @@ public class Heroe extends Actor {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
-    public void setTocado(){
-            vida--;
-            if(vida == 0){
-                muerto = true;
-                stateTime = 0;
-            }
-    }
     public void setpuntosNeg(){
         score -=100;
     }

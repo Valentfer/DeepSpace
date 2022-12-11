@@ -27,9 +27,9 @@ public class EnemigoJefe extends Actor {
     TextureRegion enemigoJefe;
     private Action currentAction;
     float tiempo;
-    int vida;
+    int vida = 10;
 
-    public EnemigoJefe( float x, float y, Stage stage, Array<DisparosEnemigo> ldisparosEnemigos, DeepSpace game, OrthographicCamera camera){
+    public EnemigoJefe(Stage stage, Array<DisparosEnemigo> ldisparosEnemigos, DeepSpace game, OrthographicCamera camera){
         this.stage = stage;
         this.game = game;
         this.camera = camera;
@@ -38,9 +38,8 @@ public class EnemigoJefe extends Actor {
         enemigoJefe = new TextureRegion(completoEneJefe,1,1,716,546);
         setSize((float) enemigoJefe.getRegionWidth() / 5, (float) enemigoJefe.getRegionHeight() / 5);
         setPosition(camera.position.x + camera.viewportWidth /2, camera.position.y - camera.viewportHeight /2);
-        animacion(x, y);
+        animacion();
 
-        vida = 10;
         tiempo = (float) (2 + Math.random());
     }
 
@@ -53,9 +52,14 @@ public class EnemigoJefe extends Actor {
     public void act(float delta) {
         super.act(delta);
 
-        moveBy(50 * delta, 0);
+        if(getX() <= (camera.position.x - camera.viewportWidth /2) + getWidth()){
+            setX((camera.position.x - camera.viewportWidth /2) + getWidth());
+        }
+        if(getX()>= (camera.position.x + camera.viewportWidth / 2) - getWidth()){
+            setX((camera.position.x + camera.viewportWidth / 2) - getWidth());
+        }
 
-        tiempo += Gdx.graphics.getDeltaTime();
+        tiempo -= Gdx.graphics.getDeltaTime();
         if(tiempo < 0 && isVisible()) {
             DisparosEnemigo disparosEnemigo = new DisparosEnemigo(getX(), getY());
             disparosEnemigo.setVisible(true);
@@ -71,10 +75,10 @@ public class EnemigoJefe extends Actor {
         return new Rectangle(getX(), getY(), getWidth(), getHeight());
     }
 
-    private void animacion(float x, float y) {
+    private void animacion() {
         removeAction(currentAction);
-        MoveToAction mov1 = Actions.moveTo(MathUtils.random(x - 400), MathUtils.random(y - 400), 7, Interpolation.linear);
-        MoveToAction mov2 = Actions.moveTo(MathUtils.random(x + 400), MathUtils.random(y + 400), 7, Interpolation.linear);
+        MoveToAction mov1 = Actions.moveTo(MathUtils.random(camera.position.x, camera.viewportWidth / 2), MathUtils.random(camera.position.y, camera.viewportHeight / 2), 7, Interpolation.linear);
+        MoveToAction mov2 = Actions.moveTo(MathUtils.random(camera.position.x, camera.viewportWidth / 2), MathUtils.random(camera.position.y, camera.viewportHeight / 2), 7, Interpolation.linear);
         SequenceAction seq = Actions.sequence(mov1, mov2);
         currentAction = Actions.repeat(RepeatAction.FOREVER, seq);
         addAction(currentAction);

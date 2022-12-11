@@ -55,7 +55,7 @@ public class Manager extends Actor {
     public void act(float delta) {
         super.act(delta);
         if(score == 1000){
-            enemigoJefe = new EnemigoJefe(camera.position.x + (camera.viewportWidth /2), camera.position.y , stage, ldisparosEnemigos, game,camera);
+            enemigoJefe = new EnemigoJefe(stage, ldisparosEnemigos, game,camera);
             enemigoJefe.setVisible(true);
             stage.addActor(enemigoJefe);
 
@@ -63,6 +63,7 @@ public class Manager extends Actor {
             hudEnemigo.setVisible(true);
             stage.addActor(hudEnemigo);
 
+            score += 100;
         }
 
         for (PowerUp up : lPowerUp) {
@@ -78,7 +79,7 @@ public class Manager extends Actor {
             if (!value.muerto && value.isVisible() && Intersector.overlaps(heroe.getShape(), value.getShape())) {
                 explosion.play();
                 value.explotar();
-                heroe.setTocado();
+                heroe.vida--;
                 heroe.setpuntosNeg();
                 score -= 100;
             }
@@ -87,7 +88,7 @@ public class Manager extends Actor {
         for (DisparosEnemigo ldisparosEnemigo : ldisparosEnemigos) {
             if (heroe.isVisible() && ldisparosEnemigo.isVisible() && Intersector.overlaps(heroe.getShape(), ldisparosEnemigo.getShape())) {
                 ldisparosEnemigo.setVisible(false);
-                heroe.setTocado();
+                heroe.vida--;
                 heroe.setpuntosNeg();
                 score -= 100;
             }
@@ -132,7 +133,7 @@ public class Manager extends Actor {
         for (Disparos lDisparo : lDisparos) {
             if (lDisparo.isVisible()&& enemigoJefe.isVisible() && Intersector.overlaps(lDisparo.getShape(), enemigoJefe.getShape())) {
                 enemigoJefe.vida--;
-                hudEnemigo.quitarVida();
+                hudEnemigo.vida--;
                 score += 100;
                 heroe.setpuntosPos();
                 if(enemigoJefe.vida == 0) {
@@ -144,7 +145,7 @@ public class Manager extends Actor {
         }
 
         if(enemigoJefe.isVisible() && Intersector.overlaps(enemigoJefe.getShape(), heroe.getShape())) {
-            heroe.setTocado();
+            heroe.vida--;
             score -= 100;
         }
     }

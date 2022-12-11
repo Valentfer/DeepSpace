@@ -15,7 +15,7 @@ public class HudEnemigo extends Actor {
     OrthographicCamera camera;
     TextureRegion hudvida0, hudvida1, hudvida2, hudvida3, hudvida4, hudvida5, hudvida6, hudvida7, hudvida8, hudvida9,
             hudvida10;
-    int vida;
+    int vida = 10;
 
     public HudEnemigo(Stage stage, DeepSpace game, OrthographicCamera camera){
         this.stage = stage;
@@ -37,7 +37,6 @@ public class HudEnemigo extends Actor {
 
         setSize(hudvida10.getRegionWidth(), hudvida10.getRegionHeight());
         setPosition( camera.position.x + 50, camera.position.y + 190);
-        vida = 10;
     }
 
     @Override
@@ -84,8 +83,5 @@ public class HudEnemigo extends Actor {
                 break;
 
         }
-    }
-    public void quitarVida(){
-        vida--;
     }
 }

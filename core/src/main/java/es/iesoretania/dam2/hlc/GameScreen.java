@@ -43,7 +43,6 @@ public class GameScreen extends ScreenAdapter {
 			mapRenderer = new OrthogonalTiledMapRenderer(map);
 
 			Music space = Gdx.audio.newMusic(Gdx.files.internal("space-asteroids.ogg"));
-			space.setVolume(0);
 			space.setLooping(true);
 			space.play();
 
@@ -65,10 +64,9 @@ public class GameScreen extends ScreenAdapter {
 			stage = new Stage();
 			heroe = new Heroe(400, 100, stage, game, lDisparos);
 			PowerUp powerUp = new PowerUp();
-		    enemigoJefe = new EnemigoJefe(0, 0, stage, lDisparosEnemigo, game, camera);
+		    enemigoJefe = new EnemigoJefe(stage, lDisparosEnemigo, game, camera);
 			enemigoJefe.setVisible(false);
 			hudEnemigo = new HudEnemigo(stage,game,camera);
-			hudEnemigo.setVisible(false);
 			Actor score = new Manager(heroe, game, enemigo ,disparos, stage, lEnemigo, lDisparos, lDisparosEnemigo, camera, enemigoJefe, hudEnemigo);
 			stage.addActor(heroe);
 			stage.addActor(powerUp);
@@ -103,12 +101,7 @@ public class GameScreen extends ScreenAdapter {
 				heroe.setX((camera.position.x + camera.viewportWidth / 2) - heroe.getWidth());
 			}
 
-			if(enemigoJefe.getX() <= (camera.position.x - camera.viewportWidth /2) + enemigoJefe.getWidth()){
-				enemigoJefe.setX((camera.position.x - camera.viewportWidth /2)+ enemigoJefe.getWidth());
-			}
-			if(enemigoJefe.getX()>= (camera.position.x + camera.viewportWidth / 2) - enemigoJefe.getWidth()){
-				enemigoJefe.setX((camera.position.x + camera.viewportWidth / 2) - enemigoJefe.getWidth());
-			}
+
 
 			for (Disparos lDisparo : lDisparos) {
 				if (lDisparo.getX() >= (camera.position.x + camera.viewportWidth / 2)) {
@@ -129,7 +122,8 @@ public class GameScreen extends ScreenAdapter {
 			if(camera.position.x > mapWidthInPixels-camera.viewportWidth) {
 				camera.position.x = camera.viewportWidth / 2 + offsetX;
 				heroe.setX((int) camera.position.x);
-				enemigoJefe.setX(camera.position.x + camera.viewportWidth / 2);
+				enemigoJefe.setX(camera.position.x);
+				hudEnemigo.setX(camera.position.x);
 			}
 
 			camera.position.y =  camera.viewportHeight / 2 + offsetY;
