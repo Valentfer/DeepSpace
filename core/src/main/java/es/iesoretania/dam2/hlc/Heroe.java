@@ -29,7 +29,6 @@ public class Heroe extends Actor {
     private static Animation<TextureRegion> explosion;
     float stateTime;
     boolean ganado = false;
-    boolean muerto = false;
     TextureRegion regionActual, naveReposo, naveArriba, naveAbajo;
     Texture completoExplosion, completoNave;
     public Heroe(float x, float y, Stage stage, DeepSpace game, Array<Disparos> lDisparos) {
@@ -54,7 +53,7 @@ public class Heroe extends Actor {
         explosiones[2] = new TextureRegion(completoExplosion, 2, 36, 25, 26);
         explosiones[3] = new TextureRegion(completoExplosion, 35, 36, 25, 26);
         explosiones[4] = new TextureRegion(completoExplosion, 2, 68, 25, 26);
-        explosion = new Animation<>(0.051f, explosiones);
+        explosion = new Animation<>(0.5f, explosiones);
 
         stateTime = 0;
     }
@@ -71,7 +70,6 @@ public class Heroe extends Actor {
             stateTime += Gdx.graphics.getDeltaTime();
             regionActual = explosion.getKeyFrame(stateTime,false);
             if(explosion.isAnimationFinished(stateTime)){
-                muerto = false;
                 this.setVisible(false);
                 game.setScreen(new TheEndScreen(game, ganado, score));
             }

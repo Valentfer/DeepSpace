@@ -27,6 +27,7 @@ public class Manager extends Actor {
     OrthographicCamera camera;
     Array<PowerUp> lPowerUp = new Array<>();
     public int score;
+    boolean enemigoJefeCreado = false;
     public Manager(Heroe heroe, DeepSpace game, Enemigo enemigo, Disparos disparos, Stage stage, Array<Enemigo> lEnemigo,
                    Array<Disparos> lDisparos, Array<DisparosEnemigo> ldisparosEnemigos, OrthographicCamera camera,
                    EnemigoJefe enemigoJefe, HudEnemigo hudEnemigo) {
@@ -54,7 +55,7 @@ public class Manager extends Actor {
     @Override
     public void act(float delta) {
         super.act(delta);
-        if(score == 1000){
+        if(score == 1000 && !enemigoJefeCreado){
             enemigoJefe = new EnemigoJefe(stage, ldisparosEnemigos, game,camera);
             enemigoJefe.setVisible(true);
             stage.addActor(enemigoJefe);
@@ -63,7 +64,7 @@ public class Manager extends Actor {
             hudEnemigo.setVisible(true);
             stage.addActor(hudEnemigo);
 
-            score += 100;
+            enemigoJefeCreado = true;
         }
 
         for (PowerUp up : lPowerUp) {
@@ -132,20 +133,21 @@ public class Manager extends Actor {
 
         for (Disparos lDisparo : lDisparos) {
             if (lDisparo.isVisible()&& enemigoJefe.isVisible() && Intersector.overlaps(lDisparo.getShape(), enemigoJefe.getShape())) {
+                lDisparo.setVisible(false);
                 enemigoJefe.vida--;
                 hudEnemigo.vida--;
                 score += 100;
                 heroe.setpuntosPos();
-                if(enemigoJefe.vida == 0) {
-                    boolean ganado = true;
-                    game.setScreen(new TheEndScreen(game, ganado, score));
-
-                }
             }
         }
-
+        if(enemigoJefe.vida == 0) {
+            boolean ganado = true;
+            enemigoJefeCreado = false;
+            game.setScreen(new TheEndScreen(game, ganado, score));
+        }
         if(enemigoJefe.isVisible() && Intersector.overlaps(enemigoJefe.getShape(), heroe.getShape())) {
             heroe.vida--;
+            heroe.setpuntosNeg();
             score -= 100;
         }
     }

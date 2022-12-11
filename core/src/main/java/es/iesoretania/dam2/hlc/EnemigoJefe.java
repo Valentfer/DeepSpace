@@ -68,7 +68,6 @@ public class EnemigoJefe extends Actor {
 
             tiempo = (float) (2 + Math.random());
         }
-
     }
 
     Rectangle getShape() {
