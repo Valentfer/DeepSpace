@@ -20,7 +20,7 @@ public class MenuScreen extends ScreenAdapter {
         this.game = game;
         stage = new Stage(new ScreenViewport());
 
-        Label titulo = new Label("Deep Space", game.gameSkin, "default");
+        Label titulo = new Label("Deep Space", game.gameSkin, "title");
         titulo.setAlignment(Align.center);
         titulo.setY(Gdx.graphics.getHeight() / 1.5f);
         titulo.setFontScale(5f);
