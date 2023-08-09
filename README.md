@@ -26,3 +26,8 @@ Useful Gradle tasks and flags:
 
 Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
 For example, `core:clean` removes `build` folder only from the `core` project.
+
+## Disclaimer
+
+Todos los assets usados en esta demo de previsualización son recursos gratuitos de páginas de internet que en su momento encontré, he perdido estas direcciones y es por esto que no hago mención a ellos.
+Si alguien se los encuentra y puede enviarme un mensaje, con gusto haré las menciones indicadas.  
